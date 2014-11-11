@@ -2,9 +2,14 @@ package uc.pgi.coimbraweather;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.google.gson.JsonObject;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -28,7 +33,19 @@ public class WeatherActivity extends Activity {
         getMenuInflater().inflate(R.menu.menu_weather, menu);
         ButterKnife.inject(this);
 
+        Ion.with(this)
+                .load("http://date.jsontest.com/")
+                .asJsonObject()
+                .setCallback(new FutureCallback<JsonObject>() {
+                    @Override
+                    public void onCompleted(Exception e, JsonObject result) {
+                        // do stuff with the result or error
+                        if (result!=null)Log.i("Result", "" + result.toString());
+                        else
+                        Log.e("Error", "" + e.getMessage());
 
+                    }
+                });
 
         return true;
     }
