@@ -1,20 +1,35 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:0.13.2'
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
+apply plugin: 'com.android.application'
 
-allprojects {
-    repositories {
-        jcenter()
-    }
+repositories {
+    mavenCentral()
 }
 
+dependencies {
+    compile 'com.koushikdutta.ion:ion:2.+'
+}
 
+android {
+    sourceSets {
+        main {
+            manifest.srcFile 'app/src/main/AndroidManifest.xml'
+            res.srcDirs = ['app/src/main/res/']
+            java.srcDirs = ['app/src/']
+        }
+    }
+
+    defaultConfig {
+        targetSdkVersion 20
+        minSdkVersion 9
+    }
+
+    compileSdkVersion 20
+    buildToolsVersion "21.1.0"
+}
