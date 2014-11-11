@@ -8,11 +8,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import utils.Temperature;
 
 
 public class WeatherActivity extends Activity {
@@ -34,18 +36,18 @@ public class WeatherActivity extends Activity {
         ButterKnife.inject(this);
 
         Ion.with(this)
-                .load("http://date.jsontest.com/")
-                .asJsonObject()
-                .setCallback(new FutureCallback<JsonObject>() {
-                    @Override
-                    public void onCompleted(Exception e, JsonObject result) {
-                        // do stuff with the result or error
-                        if (result!=null)Log.i("Result", "" + result.toString());
-                        else
-                        Log.e("Error", "" + e.getMessage());
+                .load("https://aqueous-chamber-4634.herokuapp.com/meteo?lat=40.2&lng=-8.4166667")
+                .as(new TypeToken<Temperature>(){})
+                .setCallback(new FutureCallback<Temperature>() {
+            @Override
+            public void onCompleted(Exception e, Temperature result) {
+                // do stuff with the result or error
+                if (result != null) Log.i("Result", "" + result.toString());
+                else
+                    Log.e("Error", "" + e.getMessage());
 
-                    }
-                });
+            }
+        });
 
         return true;
     }
