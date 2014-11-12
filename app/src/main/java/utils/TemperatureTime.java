@@ -3,7 +3,6 @@ package utils;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by migueloliveira on 11/11/14.

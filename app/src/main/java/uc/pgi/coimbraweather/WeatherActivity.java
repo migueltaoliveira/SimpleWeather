@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
@@ -34,20 +36,22 @@ public class WeatherActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_weather, menu);
         ButterKnife.inject(this);
-
+        Ion.getDefault(this).configure().setGson(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create());
         Ion.with(this)
                 .load("https://aqueous-chamber-4634.herokuapp.com/meteo?lat=40.2&lng=-8.4166667")
-                .as(new TypeToken<Temperature>(){})
+                .as(new TypeToken<Temperature>() {
+                })
                 .setCallback(new FutureCallback<Temperature>() {
-            @Override
-            public void onCompleted(Exception e, Temperature result) {
-                // do stuff with the result or error
-                if (result != null) Log.i("Result", "" + result.toString());
-                else
-                    Log.e("Error", "" + e.getMessage());
-
-            }
-        });
+                    @Override
+                    public void onCompleted(Exception e, Temperature result) {
+                        // do stuff with the result or error
+                        if (result != null) Log.i("Result", "" + result.toString());
+                        else {
+                            e.printStackTrace();
+                            Log.e("Error", "" + e.getMessage());
+                        }
+                    }
+                });
 
         return true;
     }
