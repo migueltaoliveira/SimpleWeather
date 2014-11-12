@@ -29,16 +29,9 @@ public class WeatherActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-    }
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_weather, menu);
         ButterKnife.inject(this);
         Ion.getDefault(this).configure().setGson(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create());
-
 
 
         ResponseFuture<Temperature> json = Ion.with(this)
@@ -52,8 +45,8 @@ public class WeatherActivity extends Activity {
             Ion.with(this)
                     .load("https://aqueous-chamber-4634.herokuapp.com/static/"+json.get().icon+".png")
                     .withBitmap()
-                    .placeholder(R.drawable.ic_launcher)
-                    .error(R.drawable.ic_launcher)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
                     .intoImageView(imageView);
 
         } catch (InterruptedException e) {
@@ -61,6 +54,14 @@ public class WeatherActivity extends Activity {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_weather, menu);
+
 
         return true;
     }
