@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.GsonBuilder;
@@ -46,7 +47,15 @@ public class WeatherActivity extends Activity {
                 });
 
         try {
-            Log.i("Resulst", "" + json.get().toString());
+            Log.i("Result", "" + json.get().toString());
+            ImageView imageView = ButterKnife.findById(this, R.id.imageView);
+            Ion.with(this)
+                    .load("https://aqueous-chamber-4634.herokuapp.com/static/"+json.get().icon+".png")
+                    .withBitmap()
+                    .placeholder(R.drawable.ic_launcher)
+                    .error(R.drawable.ic_launcher)
+                    .intoImageView(imageView);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
