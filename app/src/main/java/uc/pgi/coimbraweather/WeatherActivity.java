@@ -24,7 +24,7 @@ import utils.Temperature;
 
 
 public class WeatherActivity extends Activity {
-    @InjectView(R.id.header) TextView header;
+    @InjectView(R.id.temp) TextView temp;
     @InjectView(R.id.imageView) ImageView imageView;
     @InjectView(R.id.label) TextView label;
 
@@ -106,6 +106,9 @@ public class WeatherActivity extends Activity {
                     .error(R.drawable.placeholder)
                     .intoImageView(imageView);
 
+            if (json.get().listTemperature.size() != 0) {
+                temp.setText(json.get().listTemperature.get(0).temperature + " ºC");
+            }
             label.setText(json.get().summary);
 
         } catch (InterruptedException e) {
