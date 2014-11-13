@@ -22,8 +22,8 @@ import utils.Temperature;
 
 public class WeatherActivity extends Activity {
     @InjectView(R.id.header) TextView header;
-
-
+    @InjectView(R.id.imageView) ImageView imageView;
+    @InjectView(R.id.label) TextView label;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,6 @@ public class WeatherActivity extends Activity {
         ButterKnife.inject(this);
         Ion.getDefault(this).configure().setGson(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create());
 
-
         ResponseFuture<Temperature> json = Ion.with(this)
                 .load("https://aqueous-chamber-4634.herokuapp.com/meteo?lat=40.2&lng=-8.4166667")
                 .as(new TypeToken<Temperature>() {
@@ -41,13 +40,14 @@ public class WeatherActivity extends Activity {
 
         try {
             Log.i("Result", "" + json.get().toString());
-            ImageView imageView = ButterKnife.findById(this, R.id.imageView);
             Ion.with(this)
                     .load("https://aqueous-chamber-4634.herokuapp.com/static/"+json.get().icon+".png")
                     .withBitmap()
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.placeholder)
                     .intoImageView(imageView);
+
+            label.setText(json.get().summary);
 
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -61,8 +61,6 @@ public class WeatherActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_weather, menu);
-
-
         return true;
     }
 
