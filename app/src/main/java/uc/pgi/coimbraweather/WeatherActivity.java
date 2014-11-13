@@ -63,7 +63,6 @@ public class WeatherActivity extends Activity {
         // or: LocationManager.GPS_PROVIDER
         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
                 0, locationListener);
-
     }
 
 
@@ -100,7 +99,7 @@ public class WeatherActivity extends Activity {
         try {
             Log.i("Result", "" + json.get().toString());
             Ion.with(this)
-                    .load(url + "/static/"+json.get().icon+".png")
+                    .load(url + "/static/" + json.get().icon + ".png")
                     .withBitmap()
                     .intoImageView(imageView);
 
