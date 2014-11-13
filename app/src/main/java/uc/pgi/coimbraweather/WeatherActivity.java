@@ -102,8 +102,6 @@ public class WeatherActivity extends Activity {
             Ion.with(this)
                     .load(url + "/static/"+json.get().icon+".png")
                     .withBitmap()
-                    .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.placeholder)
                     .intoImageView(imageView);
 
             if (json.get().listTemperature.size() != 0) {
