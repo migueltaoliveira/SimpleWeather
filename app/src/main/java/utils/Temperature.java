@@ -24,7 +24,7 @@ public class Temperature {
     }
 
     public String toString() {
-        return "Temperature [summary="+summary+", icon="+icon+", hour="+listTemperature+"]";
+        return "Temperature [summary=" + summary + ", icon=" + icon + ", hour=" + listTemperature + "]";
     }
 
 }

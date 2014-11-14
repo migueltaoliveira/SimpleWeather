@@ -20,7 +20,7 @@ public class TemperatureTime {
     }
 
     public String toString() {
-        return "Temperature [time="+time+", temperature="+temperature+"]";
+        return "Temperature [time=" + time + ", temperature=" + temperature + "]";
     }
 
 
