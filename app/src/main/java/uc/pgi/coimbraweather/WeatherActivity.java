@@ -61,7 +61,7 @@ public class WeatherActivity extends Activity {
         public void onProviderDisabled(String provider) {
         }
     };
-    private String url = "https://aqueous-chamber-4634.herokuapp.com";
+    private String url = "https://simpleweatherdemo.herokuapp.com";
     private LocationManager mLocationManager;
 
     @Override
