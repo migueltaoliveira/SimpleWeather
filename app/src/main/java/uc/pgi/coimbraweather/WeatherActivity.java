@@ -1,6 +1,10 @@
 package uc.pgi.coimbraweather;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -8,7 +12,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.GsonBuilder;
@@ -24,14 +30,17 @@ import utils.Temperature;
 
 
 public class WeatherActivity extends Activity {
-    @InjectView(R.id.temp) TextView temp;
-    @InjectView(R.id.imageView) ImageView imageView;
-    @InjectView(R.id.label) TextView label;
+    @InjectView(R.id.temp)
+    TextView temp;
+    @InjectView(R.id.imageView)
+    ImageView imageView;
+    @InjectView(R.id.label)
+    TextView label;
+    @InjectView(R.id.progress_bar)
+    ProgressBar progressBar;
+
 
     private String TAG = getClass().getName();
-    private String url = "https://aqueous-chamber-4634.herokuapp.com";
-    private LocationManager mLocationManager;
-
     // Define a listener that responds to location updates
     LocationListener locationListener = new LocationListener() {
         public void onLocationChanged(Location location) {
@@ -39,23 +48,52 @@ public class WeatherActivity extends Activity {
             Log.i(TAG, "Latitude: " + location.getLatitude() + ", Longitude:" + location.getLongitude());
 
             stopCheckingLocation();
+
             updateInformation(location.getLatitude(), location.getLongitude());
         }
 
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
 
-        public void onProviderEnabled(String provider) {}
+        public void onProviderEnabled(String provider) {
+        }
 
-        public void onProviderDisabled(String provider) {}
+        public void onProviderDisabled(String provider) {
+        }
     };
-
+    private String url = "https://aqueous-chamber-4634.herokuapp.com";
+    private LocationManager mLocationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
 
+        //Inject views into activity
         ButterKnife.inject(this);
+
+
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (!manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER) && !manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Your Location Services seems to be disabled, do you want to enable it?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                            dialog.cancel();
+                        }
+                    });
+            final AlertDialog alert = builder.create();
+            alert.show();
+        }
+
 
         // Check http://developer.android.com/guide/topics/location/strategies.html
         mLocationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
@@ -88,9 +126,23 @@ public class WeatherActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Updates the UI with the current weather information for the current location
+     *
+     * @param latitude
+     * @param longitude
+     */
     private void updateInformation(double latitude, double longitude) {
+
+        progressBar.setVisibility(View.INVISIBLE);
+
+
+        //Using ION to retrieve the JSON with the current location
+        //and using a custom GSON object
         Ion.getDefault(this).configure().setGson(new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create());
 
+
+        //Example of Future usage...
         ResponseFuture<Temperature> json = Ion.with(this)
                 .load(url + "/meteo?lat=" + latitude + "&lng=" + longitude)
                 .as(new TypeToken<Temperature>() {
@@ -98,6 +150,8 @@ public class WeatherActivity extends Activity {
 
         try {
             Log.i("Result", "" + json.get().toString());
+
+            //Using ION to load the image
             Ion.with(this)
                     .load(url + "/static/" + json.get().icon + ".png")
                     .withBitmap()
