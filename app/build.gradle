@@ -8,7 +8,7 @@ android {
     defaultConfig {
         applicationId "uc.pgi.CoimbraWeather"
         minSdkVersion 15
-        targetSdkVersion 15
+        targetSdkVersion 20
         versionCode 1
         versionName "1.0"
     }
@@ -32,8 +32,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.jakewharton:butterknife:4.0.1'
     compile 'com.koushikdutta.ion:ion:2.+'
-    compile 'com.android.support:support-v4:19.1.0'
-
+    compile 'com.android.support:support-v4:21.0.0'
 
 
 }
